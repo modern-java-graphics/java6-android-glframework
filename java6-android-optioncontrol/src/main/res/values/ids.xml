@@ -1,0 +1,7 @@
+<resources>
+
+    <item type="id" name="drawer_layout" />
+    <item type="id" name="left_drawer" />
+    <item type="id" name="toolbar" />
+
+</resources>

@@ -1,6 +1,6 @@
 ![Logo](http://i.imgur.com/yxIaWQ4.png "Logo")
 ============================
-This repo provides a concise framework and helper utilities to leverage modern OpenGL/ES in Java for Android. The purpose is to inform developers, but also provide a testbed for cross-device testing between various mobile GPUs. This repo contains only contains utility code which can be used independently of the supplied demo code found in this repo <a href="https://github.com/typhonrt/modern-java6-android-gldemos" target="_blank">modern-java6-android-glframework</a>. The framework code provides concise utility code that makes working with OpenGL with Java easier and updates several utility classes like GLSurfaceView which has been "long in the tooth" in regard to the Android SDK utility code for OpenGL.  
+This repo provides a concise framework and helper utilities to leverage modern OpenGL/ES in Java for Android. The purpose is to inform developers, but also provide a testbed for cross-device testing between various mobile GPUs. This repo only contains utility code which can be used independently of the supplied demo code found in this repo <a href="https://github.com/typhonrt/modern-java6-android-gldemos" target="_blank">modern-java6-android-glframework</a>. The framework code provides concise utility code that makes working with OpenGL with Java easier and updates several utility classes like GLSurfaceView which has been "long in the tooth" in regard to the Android SDK utility code for OpenGL.  
 
 Device requirements: Android 5.0+ / OpenGL ES 3.0+ 
 

@@ -8,8 +8,8 @@ IDE requirements: Android Studio 1.0.1 / build tools: 21.1.2
 
 This framework requires the latest Android Studio developer setup. To install Android Studio please <a href="http://developer.android.com/sdk/index.html" target="_blank">download it here</a>
 
-For full source code installation instructions refer to <a href="https://github.com/typhonrt/modern-java6-android-gldemos/wiki/installation" target="_blank">the wiki / install guide</a>. In time an expanded wiki will illuminate the full power of modern OpenGL with Java for Android. Please stay tuned as this effort is taken on by Michael Leahy, the author, in his spare time and more demos are forthcoming.
+For full source code installation instructions refer to <a href="https://github.com/typhonrt/modern-java6-android-gldemos/wiki/installation" target="_blank">the wiki / install guide</a>. In time an expanded wiki will illuminate the full power of modern OpenGL with Java for Android. Please stay tuned as this effort is taken on by Michael Leahy, the author, in his spare time.
 
-If you found this framework and demos useful consider backing his Kickstarter effort (ends 12.15.14 / tonight at 9PM PST!) to launch a next generation video engine for Android which uses OpenGL ES 3.0+ and hardware accelerated media encoding / decoding.  Click the image below to check it out:
+If you found this framework useful consider backing his Kickstarter effort (ends 12.15.14 / tonight at 9PM PST!) to launch a next generation video engine for Android which uses OpenGL ES 3.0+ and hardware accelerated media encoding / decoding.  Click the image below to check it out:
 <a href="https://www.kickstarter.com/projects/85808410/typhonrt-video-suite-next-gen-video-apps-for-andro-0" target="_blank"><img src="http://i.imgur.com/gWh4A8M.png" 
 alt="TyphonRT Video Suite" width="850" height="480" border="10" /></a>

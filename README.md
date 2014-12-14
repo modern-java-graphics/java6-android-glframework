@@ -2,9 +2,11 @@
 ============================
 This repo provides a concise framework and helper utilities to leverage modern OpenGL/ES in Java for Android. The purpose is to inform developers, but also provide a testbed for cross-device testing between various mobile GPUs. This repo only contains utility code which can be used independently of the supplied demo code found in this repo <a href="https://github.com/typhonrt/modern-java6-android-gldemos" target="_blank">modern-java6-android-glframework</a>. The framework code provides concise utility code that makes working with OpenGL with Java easier and updates several utility classes like GLSurfaceView which has been "long in the tooth" in regard to the Android SDK utility code for OpenGL.  
 
-Device requirements: Android 5.0+ / OpenGL ES 3.0+ 
+Device requirements: Android 5.0+ / OpenGL ES 3.0+
 
 IDE requirements: Android Studio 1.0.1 / build tools: 21.1.2
+
+Right now only NVidia Tegra K1 based devices support OpenGL ES 3.1 properly. Sadly Qualcomm / Motorola only shipped OpenGL ES 3.0 drivers for the Nexus 6. 
 
 This framework requires the latest Android Studio developer setup. To install Android Studio please <a href="http://developer.android.com/sdk/index.html" target="_blank">download it here</a>
 

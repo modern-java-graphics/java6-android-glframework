@@ -25,15 +25,4 @@ public class FBOData
 
    public int width;
    public int height;
-
-   public FBOData()
-   {
-   }
-
-   public int getTextureID()
-   {
-      return textureID;
-   }
-
-   public void setTextureID(int textureID) { this.textureID = textureID; }
 }

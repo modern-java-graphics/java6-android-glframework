@@ -203,6 +203,7 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
    private int                                  debugFlags;
 
    private IGLVersion                           eglContextGLESVersion;
+   private IGLVersion                           actualEGLContextGLESVersion = XeGLUnknown.GL_UNKNOWN;
 
    private boolean                              preserveEGLContextOnPause;
 
@@ -277,6 +278,11 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
       this.debugFlags = debugFlags;
    }
 
+   public IGLVersion getContextGLESVersion()
+   {
+      return actualEGLContextGLESVersion;
+   }
+
    /**
     * Get the current value of the debug flags.
     *
@@ -285,11 +291,6 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
    public int getDebugFlags()
    {
       return debugFlags;
-   }
-
-   public IGLVersion getContextGLESVersion()
-   {
-      return glThread != null ? glThread.getContextClientGLESVersion() : XeGLUnknown.GL_UNKNOWN;
    }
 
    /**
@@ -830,7 +831,25 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
 
             context = EGL14.eglCreateContext(display, config, EGL14.EGL_NO_CONTEXT,
              majorGLVersion != 0 ? majorAttribList : null, 0);
+
+            minorGLVersion = 0;
          }
+
+         int clientValue[] = new int[1];
+
+         EGL14.eglQueryContext(display, context, EGLExt.EGL_CONTEXT_MAJOR_VERSION_KHR, clientValue, 0);
+         if (EGL14.eglGetError() != EGL14.EGL_BAD_ATTRIBUTE)
+         {
+            majorGLVersion = clientValue[0];
+         }
+
+         EGL14.eglQueryContext(display, context, EGLExt.EGL_CONTEXT_MINOR_VERSION_KHR, clientValue, 0);
+         if (EGL14.eglGetError() != EGL14.EGL_BAD_ATTRIBUTE)
+         {
+            minorGLVersion = clientValue[0];
+         }
+
+         GLSurfaceView2.this.actualEGLContextGLESVersion = AndroidGLESUtil.getGLVersion(majorGLVersion, minorGLVersion);
 
          return context;
       }
@@ -1081,8 +1100,6 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
       EGLConfig                              mEglConfig;
       EGLContext                             mEglContext;
 
-      private IGLVersion actualEGLContextGLESVersion = XeGLUnknown.GL_UNKNOWN;
-
       public EglHelper(WeakReference<GLSurfaceView2> glSurfaceViewWeakRef)
       {
          mGLSurfaceViewWeakRef = glSurfaceViewWeakRef;
@@ -1143,7 +1160,7 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
 
          // Store major / minor OpenGL ES versions by querying the new context.
 
-         int majorGLVersion = 0, minorGLVersion = 0;
+         int majorGLVersion = -1, minorGLVersion = -1;
 
          int clientValue[] = new int[1];
          EGL14.eglQueryContext(mEglDisplay, mEglContext, EGLExt.EGL_CONTEXT_MAJOR_VERSION_KHR, clientValue, 0);
@@ -1158,8 +1175,21 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
             minorGLVersion = clientValue[0];
          }
 
-         // Set actual IGLVersion
-         actualEGLContextGLESVersion = AndroidGLESUtil.getGLVersion(majorGLVersion, minorGLVersion);
+         // Some EGL implementations like ARM Mali circa Q2 2015 don't support EGL_CONTEXT_MINOR_VERSION_KHR
+         // Only set if major / minor queries succeed.
+         if (view != null)
+         {
+            if (majorGLVersion >= 0 && minorGLVersion >= 0)
+            {
+               // Set actual IGLVersion
+               view.actualEGLContextGLESVersion = AndroidGLESUtil.getGLVersion(majorGLVersion, minorGLVersion);
+            }
+            else
+            {
+               majorGLVersion = view.actualEGLContextGLESVersion.getMajorVersion();
+               minorGLVersion = view.actualEGLContextGLESVersion.getMinorVersion();
+            }
+         }
 
          // Post debug message indicating the major / minor version of the GL Context created.
          Log.d(s_TAG, "EglHelper - createContext - major version: " +majorGLVersion +"; minor version: " +minorGLVersion);
@@ -1287,11 +1317,6 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
          }
       }
 
-      public IGLVersion getContextClientGLESVersion()
-      {
-         return mEglContext != null ? actualEGLContextGLESVersion : XeGLUnknown.GL_UNKNOWN;
-      }
-
       public void finish()
       {
          if (s_LOG_EGL)
@@ -1302,13 +1327,13 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
          if (mEglContext != null)
          {
             GLSurfaceView2 view = mGLSurfaceViewWeakRef.get();
+
             if (view != null)
             {
                view.eglContextFactory.destroyContext(mEglDisplay, mEglContext);
+               view.actualEGLContextGLESVersion = XeGLUnknown.GL_UNKNOWN;
             }
             mEglContext = null;
-
-            actualEGLContextGLESVersion = XeGLUnknown.GL_UNKNOWN;
          }
 
          if (mEglDisplay != null)
@@ -1394,11 +1419,6 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
          requestRender = true;
          renderMode = s_RENDERMODE_CONTINUOUSLY;
          this.glSurfaceViewWeakRef = glSurfaceViewWeakRef;
-      }
-
-      public IGLVersion getContextClientGLESVersion()
-      {
-         return eglHelper != null ? eglHelper.getContextClientGLESVersion() : XeGLUnknown.GL_UNKNOWN;
       }
 
       @Override
@@ -1761,7 +1781,7 @@ public class GLSurfaceView2 extends SurfaceView implements SurfaceHolder.Callbac
                      // probably because the SurfaceView surface has been destroyed,
                      // but we haven't been notified yet.
                      // Log the error to help developers understand why rendering stopped.
-                     EglHelper.logEglErrorAsWarning("GLThread", "eglSwapBuffers", swapError);
+                     eglHelper.logEglErrorAsWarning("GLThread", "eglSwapBuffers", swapError);
 
                      synchronized (s_GLThreadManager)
                      {

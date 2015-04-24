@@ -30,6 +30,7 @@ public class AndroidGLES30Util extends AndroidGLES20Util
    private static final ThreadLocal<int[]>   s_CREATE_TEXTURE_ID = new ThreadLocal<int[]>();
    private static final ThreadLocal<int[]>   s_CREATE_SAMPLER_ID = new ThreadLocal<int[]>();
    private static final ThreadLocal<int[]>   s_CREATE_VERTEX_ARRAY_ID = new ThreadLocal<int[]>();
+   private static final ThreadLocal<int[]>   s_GET_INTERGER_IV = new ThreadLocal<int[]>();
    private static final ThreadLocal<int[]>   s_LOAD_TEXTURE_ID = new ThreadLocal<int[]>();
 
    /**
@@ -86,6 +87,20 @@ public class AndroidGLES30Util extends AndroidGLES20Util
       return vao[0];
    }
 
+   public static int getGetIntegeri_v(int target, int index)
+   {
+      int value[] = s_GET_INTERGER_IV.get();
+      if (value == null)
+      {
+         value = new int[1];
+         s_GET_INTERGER_IV.set(value);
+      }
+
+      glGetIntegeri_v(target, index, value, 0);
+
+      return value[0];
+   }
+
    /**
     * Loads a texture from an Android drawable resource performing any flipping as given. The main difference with
     * AndroidGLES30Util.loadTexture is that it also specifically sets the internal format with glTexStorage2D which
@@ -97,7 +112,7 @@ public class AndroidGLES30Util extends AndroidGLES20Util
     *
     * @return
     */
-   public static int loadTexture(Resources resources, int resource, boolean flip)
+   public static int loadTexture(Resources resources, int resource, int internalFormat, boolean flip)
    {
       int[] textures = s_LOAD_TEXTURE_ID.get();
       if (textures == null)
@@ -136,7 +151,7 @@ public class AndroidGLES30Util extends AndroidGLES20Util
 
       // It turns out we can still use the convenience method "GLUtils.texSubImage2D" below, but for compute shaders
       // it is important to make an explicit call to glTexStorage2D with an internal format of GL_RGBA8.
-      glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
+      glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);
       checkGlError();
 
       GLUtils.texSubImage2D(GL_TEXTURE_2D, 0, 0, 0, bitmap);

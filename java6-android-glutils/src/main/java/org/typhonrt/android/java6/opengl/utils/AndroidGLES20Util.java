@@ -44,6 +44,7 @@ public class AndroidGLES20Util extends AndroidGLESUtil
    private static final ThreadLocal<int[]>   s_DELETE_FRAMEBUFFER_ID = new ThreadLocal<int[]>();
    private static final ThreadLocal<int[]>   s_DELETE_TEXTURE_ID = new ThreadLocal<int[]>();
    private static final ThreadLocal<int[]>   s_LOAD_TEXTURE_ID = new ThreadLocal<int[]>();
+   private static final ThreadLocal<int[]>   s_GET_INTEGERV_ID = new ThreadLocal<int[]>();
    private static final ThreadLocal<int[]>   s_GET_PROGRAM_ID = new ThreadLocal<int[]>();
 
    public static int buildProgramFromAssets(Resources resources, String shaderFileName, int shaderType)
@@ -51,6 +52,14 @@ public class AndroidGLES20Util extends AndroidGLESUtil
       String shaderSource = loadFromAssets(resources, shaderFileName);
 
       return buildProgram(shaderSource, shaderType);
+   }
+
+   public static int buildProgramFromAssets(Resources resources, String shaderFileName, int shaderType,
+    String shaderHeader)
+   {
+      String shaderSource = loadFromAssets(resources, shaderFileName);
+
+      return buildProgram(shaderHeader + shaderSource, shaderType);
    }
 
    public static int buildProgramFromAssets(Resources resources, String vertexFileName, String fragmentFileName)
@@ -291,6 +300,20 @@ public class AndroidGLES20Util extends AndroidGLESUtil
       return frameBuffer[0];
    }
 
+   public static int getIntegerv(int pName)
+   {
+      int value[] = s_GET_INTEGERV_ID.get();
+      if (value == null)
+      {
+         value = new int[1];
+         s_GET_INTEGERV_ID.set(value);
+      }
+
+      glGetIntegerv(pName, value, 0);
+
+      return value[0];
+   }
+
    public static int getProgramiv(int programID, int pName)
    {
       int program[] = s_GET_PROGRAM_ID.get();
@@ -344,7 +367,7 @@ public class AndroidGLES20Util extends AndroidGLESUtil
       return sb.toString();
    }
 
-   public static int loadTexture(Resources resources, int resource, boolean flip)
+   public static int loadTexture(Resources resources, int resource, int internalFormat, boolean flip)
    {
       int[] textures = s_LOAD_TEXTURE_ID.get();
       if (textures == null)
@@ -381,7 +404,7 @@ public class AndroidGLES20Util extends AndroidGLESUtil
          bitmap = flipBitmap;
       }
 
-      GLUtils.texImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap, GL_UNSIGNED_BYTE, 0);
+      GLUtils.texImage2D(GL_TEXTURE_2D, 0, internalFormat, bitmap, GL_UNSIGNED_BYTE, 0);
 
       bitmap.recycle();
 

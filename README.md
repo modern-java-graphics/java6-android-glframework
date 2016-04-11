@@ -3,7 +3,7 @@
 
 Latest Updates
 ========
-(4.10.16): Update for Android Studio 2.x+ / moved repos to [modern-java-graphics](https://github.com/modern-java-graphics) organization. Moved Google Groups forum to <a href="https://groups.google.com/forum/#!forum/modern-java-graphics" target="_blank">modern-java-graphics</a>. Changed licenses for [java6-android-glframework](https://github.com/modern-java-graphics/java6-android-glframework) and [java6-android-demoframework](https://github.com/modern-java-graphics/java6-android-demoframework) to `MPL v2.0`. 
+(4.10.16): Update for Android Studio 2.x+ / moved repos to [modern-java-graphics](https://github.com/modern-java-graphics) organization. Moved Google Groups forum to <a href="https://groups.google.com/forum/#!forum/modern-java-graphics" target="_blank">modern-java-graphics</a>. Lowered API level to 19 / Kitkat. Changed licenses for [java6-android-glframework](https://github.com/modern-java-graphics/java6-android-glframework) and [java6-android-demoframework](https://github.com/modern-java-graphics/java6-android-demoframework) to `MPL v2.0`. 
 
 (1.1.15): I finally had a chance to do some refactoring this afternoon, so 
 <a href="https://groups.google.com/forum/#!topic/modern-java-graphics/cKGEl9X-cpU" target="_blank">check out this post for more information.</a>
@@ -12,7 +12,7 @@ A <a href="https://groups.google.com/forum/#!forum/modern-java-graphics" target=
 
 This repo provides a concise framework and helper utilities to leverage modern OpenGL/ES in Java for Android. The purpose is to inform developers, but also provide a testbed for cross-device testing between various mobile GPUs. This repo only contains utility code which can be used independently of the supplied demo code found in this repo <a href="https://github.com/modern-java-graphics/java6-android-gldemos" target="_blank">java6-android-gldemos</a>. The framework code provides concise utility code that makes working with OpenGL with Java easier and updates several utility classes like GLSurfaceView which has been "long in the tooth" in regard to the Android SDK utility code for OpenGL.  
 
-Device requirements: Android 5.0+ / OpenGL ES 3.0+
+Device requirements: Android 4.4+ / OpenGL ES 3.0+
 
 IDE requirements: Android Studio 2.x+ / build tools: 23.0.3
 

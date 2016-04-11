@@ -21,7 +21,8 @@ package org.typhonrt.commons.java6.opengl.utils;
 public enum XeGLES3 implements IGLVersion
 {
    GLES3_0(3, 0, "3.0"),
-   GLES3_1(3, 1, "3.1");
+   GLES3_1(3, 1, "3.1"),
+   GLES3_2(3, 2, "3.2");
 
    public final int     majorVersion, minorVersion;
 
